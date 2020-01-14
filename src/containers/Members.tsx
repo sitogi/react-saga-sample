@@ -17,16 +17,20 @@ interface DispatchProps {
   getMembersStart: (companyName: string) => void;
 }
 
+// withRouter と connect という二つの HOC を利用するために Props を合成している
 type EnhancedMembersProps = MembersProps &
   StateProps &
   DispatchProps &
   RouteComponentProps<{ companyName: string }>;
 
+// 参照したい Store State の値をコンポーネントの Props にマッピングする
 const mapStateToProps = (state: GithubState): StateProps => ({
   users: state.users,
   isLoading: state.isLoading,
 });
 
+// 発行したい Action を生成する Action Creator 関数を Props にマッピングする
+// Props 関数名と Action Creator の関数名がそれぞれ同じになるように定義してあるのでプロパティ名をショートハンドで省略できる。
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
   bindActionCreators(
     {
