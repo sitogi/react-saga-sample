@@ -3,12 +3,15 @@ import { Helmet } from 'react-helmet';
 import { Redirect, Route, Switch } from 'react-router';
 
 import Home from './components/Home';
-import Members from './containers/Members';
+import Companies from './components/companies'; // index.tsx が自動で読まれているっぽい
+import CompanyMembers from './containers/companies/Members';
 
 import './App.css';
+import pages from './pages';
 
-const title = 'いろんな会社のメンバー';
+const title = 'GitHub API デモアプリ';
 
+// HTML ヘッダと Route の定義をしている。初期表示では Home コンポーネントが表示される。
 const App: FC = () => (
   <>
     <Helmet htmlAttributes={{ lang: 'ja' }}>
@@ -19,8 +22,9 @@ const App: FC = () => (
       <h1>{title}</h1>
     </header>
     <Switch>
-      <Route path="/" exact component={Home} />
-      <Route path="/:companyName/members" component={Members} />
+      <Route path={pages.index.path} exact component={Home} />
+      <Route path={pages.companies.index.path} component={Companies} />
+      <Route path={pages.companies.members.path} component={CompanyMembers} />
       <Redirect to="/" />
     </Switch>
   </>
