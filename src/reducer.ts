@@ -18,6 +18,10 @@ export const initialState: GithubState = {
 
 // `(prevState, action) => newState` の純粋関数で表現される Reducer
 // 以前の State と Action を引数に取り、新しい State を返す gethubReducer
+// reducer でやってはいけないこと
+// 1. 引数の state と action インスタンスの値を変更する
+// 2. 副作用をおこす (API 呼び出しやルーティングを変えるなどなど)
+// 3. 実行ごとにランダムになる処理を使う (Date.now() や Math.random() を使う)
 const githubReducer: Reducer<GithubState, GithubAction> = (
   state: GithubState = initialState,
   action: GithubAction,

@@ -50,6 +50,7 @@ const MembersContainer: FC<EnhancedMembersProps> = ({ users, isLoading, getMembe
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Presentational Component の Props に Store の値を渡してあげて、それを return する。
+  // ここでは Container を Presentational に渡しているが、その逆もあるらしい。
   return <Members companyName={companyName} users={users} isLoading={isLoading} />;
 };
 
