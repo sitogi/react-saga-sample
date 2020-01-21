@@ -3,16 +3,18 @@ import { AxiosError } from 'axios';
 
 import { GithubAction } from './actions/github';
 import * as ActionType from './actions/githubConstants';
-import { User } from './services/github/models';
+import * as Model from './services/github/models';
 
 export interface GithubState {
-  users: User[];
+  users: Model.User[];
+  repositories: Model.Repository[];
   isLoading: boolean;
   error?: AxiosError | null;
 }
 
 export const initialState: GithubState = {
   users: [],
+  repositories: [],
   isLoading: false,
 };
 
@@ -32,7 +34,7 @@ const githubReducer: Reducer<GithubState, GithubAction> = (
       return {
         // ...foo はスプレッド演算子といい、中身の要素を展開することができる
         // 一度前の状態を展開することで、差分のみを更新できるようにしている
-        ...state,
+        ...state, // 個別に書いてもいいが、数が膨大な場合はこのように記載して変更したい値以外はそのままにする
         users: [], // 空のユーザ
         isLoading: true, // ローディング true
       };
@@ -47,6 +49,25 @@ const githubReducer: Reducer<GithubState, GithubAction> = (
         ...state, // uses は必須だが、ここでスプレッドしているのでそれが使われている
         isLoading: false, // ローディングは false
         error: action.payload.error, // 失敗アクションの payload に入っている axion のエラーを返す
+      };
+    // Search Repositories
+    case ActionType.SEARCH_REPOSITORIES_START:
+      return {
+        ...state,
+        repositories: [],
+        isLoading: true,
+      };
+    case ActionType.SEARCH_REPOSITORIES_SUCCEED:
+      return {
+        ...state,
+        repositories: action.payload.result.repositories,
+        isLoading: false,
+      };
+    case ActionType.SEARCH_REPOSITORIES_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload.error,
       };
     default: {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

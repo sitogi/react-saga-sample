@@ -1,6 +1,8 @@
 import axios from 'axios';
+import camelcaseKeys from 'camelcase-keys';
+import qs from 'qs';
 
-import { User } from './models';
+import { User, Repository } from './models';
 
 interface ApiConfig {
   baseURL: string;
@@ -12,15 +14,25 @@ const DEFAULT_API_CONFIG: ApiConfig = {
   timeout: 7000,
 };
 
-// getMembers 関数を返すファクトリ (クロージャ)
-export const getMembersFactory = (optionConfig?: ApiConfig) => {
-  // スプレッド構文によって未指定プロパティはデフォルト値を使用する
+const createAxiosInstance = (optionConfig?: ApiConfig) => {
   const config = {
     ...DEFAULT_API_CONFIG,
     ...optionConfig,
   };
-  // axios の初期化。ミニマムだと Base URL と timeout だけで作れるみたい
   const instance = axios.create(config);
+
+  // おそらくモデルにマッピングできるようにキャメルケースにしている
+  instance.interceptors.response.use(res => ({
+    ...res,
+    data: camelcaseKeys(res.data, { deep: true }),
+  }));
+
+  return instance;
+};
+
+// getMembers 関数を返すファクトリ (クロージャ)
+export const getMembersFactory = (optionConfig?: ApiConfig) => {
+  const instance = createAxiosInstance(optionConfig);
 
   // async - await
   const getMembers = async (organizationName: string) => {
@@ -43,4 +55,23 @@ export const getMembersFactory = (optionConfig?: ApiConfig) => {
   // getMembers が単体で呼ばれるわけではなく、あくまで getMembersFactory の環境の中で実行されているから
   // 変数 instance の値が毎回リセットされることなく蓄積されていくわけ。
   return getMembers;
+};
+
+export const searchRepositoriesFactory = (optionConfig?: ApiConfig) => {
+  const instance = createAxiosInstance(optionConfig);
+
+  const searchRepositories = async (q: string, sort?: 'stars' | 'forks' | 'updated' | '') => {
+    // クエリ文字列をパースしたりその逆をしてくれるモジュール。 'aaa=bbb&ccc=ddd' => { aaa: 'bbb', ccc: 'ddd' }
+    const params = qs.stringify({ q, sort });
+    const response = await instance.get(`/search/repositories?${params}`);
+
+    if (response.status !== 200) {
+      throw new Error('Server Error');
+    }
+    const repositories: Repository[] = response.data.items;
+
+    return repositories;
+  };
+
+  return searchRepositories;
 };

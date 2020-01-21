@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from 'react-router';
 
 import Home from './components/Home';
 import Companies from './components/companies'; // index.tsx が自動で読まれているっぽい
+import RepoSearch from './components/repositories/Search';
 import CompanyMembers from './containers/companies/Members';
 
 import './App.css';
@@ -25,6 +26,7 @@ const App: FC = () => (
       <Route path={pages.index.path} exact component={Home} />
       <Route path={pages.companies.index.path} component={Companies} />
       <Route path={pages.companies.members.path} component={CompanyMembers} />
+      <Route path={pages.repositories.search.path} component={RepoSearch} />
       <Redirect to="/" />
     </Switch>
   </>

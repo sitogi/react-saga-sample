@@ -33,7 +33,7 @@ const Members: FC<MembersProps> = ({ companyName = '<会社名>', users = [], is
             {users.map(user => (
               <Card key={user.id} href={`https://github.com/${user.login}`} target="_blank">
                 <Card.Content>
-                  <Image floated="right" size="mini" src={user.avatar_url} />
+                  <Image floated="right" size="mini" src={user.avatarUrl} />
                   <Card.Header data-test="card-header">{user.login}</Card.Header>
                   <Card.Meta>GitHub ID: {user.id}</Card.Meta>
                 </Card.Content>
