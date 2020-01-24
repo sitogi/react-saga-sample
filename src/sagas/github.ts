@@ -1,4 +1,5 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import io from 'socket.io-client';
 
 import * as Action from '../actions/githubConstants';
 import { getMembers, searchRepositories } from '../actions/github';
@@ -58,6 +59,40 @@ function* runSearchRepositories(action: ReturnType<typeof searchRepositories.sta
 export function* watchSearchRepositories() {
   yield takeLatest(Action.SEARCH_REPOSITORIES_START, runSearchRepositories);
 }
+
+// ここから WebSocket 用 Saga 。分ける方法わかってないのでとりあえずべた書き
+const createSocketConnection = () => {
+  const socket = io('');
+
+  return new Promise(resolve => {
+    socket.on('connect', () => {
+      resolve(socket);
+    });
+  });
+};
+
+// export const webSocketReducer: Reducer<WebSocketState, WebSocketAction> = (
+//   state: WebSocketState = [],
+//   action: WebSocketAction,
+// ): GithubState => {
+//   // ActionType で場合分け
+//   switch (action.type) {
+//     case ActionType.GET_MEMBERS_START:
+//       return {
+//         // ...foo はスプレッド演算子といい、中身の要素を展開することができる
+//         // 一度前の状態を展開することで、差分のみを更新できるようにしている
+//         ...state, // 個別に書いてもいいが、数が膨大な場合はこのように記載して変更したい値以外はそのままにする
+//         users: [], // 空のユーザ
+//         isLoading: true, // ローディング true
+//       };
+//     default: {
+//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//       const _: never = action;
+
+//       return state;
+//     }
+//   }
+// };
 
 // rootSaga は最上位のタスクとなるもので、これを Saga ミドルウェアに渡すとアプリ起動時に同時に起動される。
 export default function* rootSaga() {

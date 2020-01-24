@@ -20,6 +20,12 @@ const Home: FC = () => (
           <Link to={pages.repositories.search.path}>{pages.repositories.search.title}</Link>
         </List.Content>
       </List.Item>
+      <List.Item className="list-item">
+        <List.Icon name="comment alternate outline" size="large" verticalAlign="middle" />
+        <List.Content>
+          <Link to={pages.websocket.path}>{pages.websocket.title}</Link>
+        </List.Content>
+      </List.Item>
     </List>
   </>
 );

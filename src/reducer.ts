@@ -4,6 +4,7 @@ import { AxiosError } from 'axios';
 import { GithubAction } from './actions/github';
 import * as ActionType from './actions/githubConstants';
 import * as Model from './services/github/models';
+import { WebSocketResponse } from './services/websocket/models';
 
 export interface GithubState {
   users: Model.User[];
@@ -24,7 +25,7 @@ export const initialState: GithubState = {
 // 1. 引数の state と action インスタンスの値を変更する
 // 2. 副作用をおこす (API 呼び出しやルーティングを変えるなどなど)
 // 3. 実行ごとにランダムになる処理を使う (Date.now() や Math.random() を使う)
-const githubReducer: Reducer<GithubState, GithubAction> = (
+export const githubReducer: Reducer<GithubState, GithubAction> = (
   state: GithubState = initialState,
   action: GithubAction,
 ): GithubState => {
@@ -78,4 +79,7 @@ const githubReducer: Reducer<GithubState, GithubAction> = (
   }
 };
 
-export default githubReducer;
+// TODO: WebSocket 用 Reducer 追加
+export interface WebSocketState {
+  response: WebSocketResponse;
+}

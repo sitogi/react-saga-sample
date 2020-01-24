@@ -32,6 +32,10 @@ const pages = {
       title: 'リポジトリ検索',
     },
   },
+  websocket: {
+    path: '/websocket',
+    title: 'Redux-Saga で WebSocket を試したい',
+  },
 };
 
 export default pages;
