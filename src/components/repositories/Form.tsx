@@ -5,6 +5,7 @@ import { SearchRepositoriesParams } from '../../actions/github';
 
 import './Form.css';
 
+// 検索アクションに渡すパラメータとフォームの内容は同じなのでこうしておく
 export type RepositoryFormValues = SearchRepositoriesParams;
 
 // このコンポーネントの Prop

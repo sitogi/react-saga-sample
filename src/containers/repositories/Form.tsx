@@ -36,8 +36,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
 // Form の Function Container
 // 合成した Props を受け取ってレンダリングする関数。
 const RepositoryFormContainer: FC<EnhancedRepositorySearchProps> = ({ isLoading, searchRepositoriesStart }) => {
-  // State Hook
-  // useState は関数コンポーネント内で Local State に相当するものを使えるようにする機能。
+  // State Hook による RepositoryFormValues 型 Local State の宣言
   // 戻り値として state 変数とそのセッター関数を返す。なので分割代入で受け取っている。
   // 引数には、その state 変数の初期値を設定してあげる。
   const [values, setValues] = useState<RepositoryFormValues>({
@@ -46,6 +45,7 @@ const RepositoryFormContainer: FC<EnhancedRepositorySearchProps> = ({ isLoading,
 
   // フォームの何かが更新された際のイベント処理
   // SyntheticEvent はイベント情報が入っているオブジェクト
+  // Local State に対し、 targetName で指定したプロパティの値のみを newValue で更新するハンドル処理
   const handleChange = (targetName: string, newValue: string, event?: SyntheticEvent) => {
     if (event) {
       // 非同期処理の中でイベントのプロパティにアクセスしたい場合はこうする。
@@ -55,8 +55,10 @@ const RepositoryFormContainer: FC<EnhancedRepositorySearchProps> = ({ isLoading,
 
     // さっき useState で取得した state を更新するためのセッター
     // 受け取った targetName の値を newValue にして state を更新する
-    setValues(v => ({ ...v, [targetName]: newValue }));
+    // key 名に変数を使いたい場合は [] で囲むみたい
+    setValues(prevValues => ({ ...prevValues, [targetName]: newValue }));
     // 新しい state の内容を保持しておく (一行上の state は使いまわせないのだろうか...)
+    // 多分、セッターの引数が現状の value になるから？ → そうでした。
     const newValues = { ...values, [targetName]: newValue };
 
     if (!!values.q.trim() && targetName === 'sort') {
