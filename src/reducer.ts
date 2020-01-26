@@ -2,7 +2,7 @@ import { Reducer } from 'redux';
 import { AxiosError } from 'axios';
 
 import { GithubAction } from './actions/github';
-import * as ActionType from './actions/githubConstants';
+import * as ActionType from './actions/actionTypeConstants';
 import * as Model from './services/github/models';
 import { WebSocketResponse } from './services/websocket/models';
 
@@ -83,3 +83,26 @@ export const githubReducer: Reducer<GithubState, GithubAction> = (
 export interface WebSocketState {
   response: WebSocketResponse;
 }
+
+// export const webSocketReducer: Reducer<WebSocketState, WebSocketAction> = (
+//   state: WebSocketState = [],
+//   action: WebSocketAction,
+// ): GithubState => {
+//   // ActionType で場合分け
+//   switch (action.type) {
+//     case ActionType.GET_MEMBERS_START:
+//       return {
+//         // ...foo はスプレッド演算子といい、中身の要素を展開することができる
+//         // 一度前の状態を展開することで、差分のみを更新できるようにしている
+//         ...state, // 個別に書いてもいいが、数が膨大な場合はこのように記載して変更したい値以外はそのままにする
+//         users: [], // 空のユーザ
+//         isLoading: true, // ローディング true
+//       };
+//     default: {
+//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//       const _: never = action;
+
+//       return state;
+//     }
+//   }
+// };
