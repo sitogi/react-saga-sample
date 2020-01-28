@@ -1,15 +1,10 @@
-import * as Model from '../services/websocket/models';
 import * as ActionType from './actionTypeConstants';
 
-interface WebSocketResult {
-  response: Model.WebSocketResponse;
-}
-
 export const websocketActions = {
-  connect: (params: WebSocketResult) => ({
-    type: ActionType.WEBSOCKET_CONNECT as typeof ActionType.WEBSOCKET_CONNECT,
-    payload: params.response,
+  addMessage: (msg: string) => ({
+    type: ActionType.ADD_MESSAGE as typeof ActionType.ADD_MESSAGE,
+    payload: msg,
   }),
 };
 
-export type WebSocketAction = ReturnType<typeof websocketActions.connect>;
+export type WebSocketAction = ReturnType<typeof websocketActions.addMessage>;

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import RepositoriesSearch, { RepositoryListProps } from '../../components/repositories/List';
 import { Repository } from '../../services/github/models';
-import { GithubState } from '../../reducer';
+import store from '../../store';
 
 // 検索結果のリポジトリとロード中かどうかの boolean を持つ
 interface StateProps {
@@ -11,12 +11,14 @@ interface StateProps {
   isLoading: boolean;
 }
 
+type AllState = ReturnType<typeof store.getState>;
+
 type EnhancedRepositoryListProps = RepositoryListProps & StateProps;
 
 // Store の State を Props にマッピングする
-const mapStateToProps = (state: GithubState): StateProps => ({
-  repositories: state.repositories,
-  isLoading: state.isLoading,
+const mapStateToProps = (state: AllState): StateProps => ({
+  repositories: state.gitHub.repositories,
+  isLoading: state.gitHub.isLoading,
 });
 
 // それぞれ受け取って渡すだけ。

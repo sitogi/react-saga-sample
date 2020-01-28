@@ -1,4 +1,5 @@
-import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+/* eslint-disable no-console */
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 import * as Action from '../actions/actionTypeConstants';
 import { getMembers, searchRepositories } from '../actions/github';
@@ -57,24 +58,4 @@ function* runSearchRepositories(action: ReturnType<typeof searchRepositories.sta
 
 export function* watchSearchRepositories() {
   yield takeLatest(Action.SEARCH_REPOSITORIES_START, runSearchRepositories);
-}
-
-// TODO: ここから WebSocket 用 Saga だけど分ける方法わかってないのでとりあえずべた書き
-function createWebSocketConncetion() {
-  const socket: WebSocket = new WebSocket('wss://c9t4640ulh.execute-api.ap-northeast-1.amazonaws.com/test');
-  socket.send('{"message":"sendmessage", "data":"hello world from react"}');
-}
-
-function* connectWebSocket() {
-  yield call(createWebSocketConncetion);
-}
-
-// rootSaga は最上位のタスクとなるもので、これを Saga ミドルウェアに渡すとアプリ起動時に同時に起動される。
-export default function* rootSaga() {
-  // ここで fork された分だけ別のタスクも立ち上がってスタンバイする。
-  // ここで起動されるのは watchGetMembers ひとつだが、これが Action.GET_MEMBERS_START という Action Type の
-  // Action を Dispatcher から渡されてこないか監視し続けることになる。
-
-  // fork は自身とは別のスレッドを起動し、そこで特定のタスクを実行する。 Task オブジェクトを返す。
-  yield all([fork(watchGetMembers), fork(watchSearchRepositories), fork(connectWebSocket)]);
 }

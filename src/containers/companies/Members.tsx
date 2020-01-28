@@ -5,14 +5,16 @@ import { RouteComponentProps, withRouter } from 'react-router';
 
 import Members, { MembersProps } from '../../components/companies/Members';
 import { User } from '../../services/github/models';
-import { GithubState } from '../../reducer';
 import { getMembers } from '../../actions/github';
+import store from '../../store';
 
 // Store に格納する Props
 interface StateProps {
   users: User[];
   isLoading?: boolean;
 }
+
+type AllState = ReturnType<typeof store.getState>;
 
 // Dispatcher に渡す Props
 interface DispatchProps {
@@ -25,9 +27,9 @@ type EnhancedMembersProps = MembersProps & StateProps & DispatchProps & RouteCom
 // 参照したい Store State の値をコンポーネントの Props にマッピングする
 // GithubState の state を受け取り、 StateProps にマッピングしてリターンしている。
 // TypeScript で Arrow 関数の戻り値の型を定義する場合はこうする。
-const mapStateToProps = (state: GithubState): StateProps => ({
-  users: state.users,
-  isLoading: state.isLoading,
+const mapStateToProps = (state: AllState): StateProps => ({
+  users: state.gitHub.users,
+  isLoading: state.gitHub.isLoading,
 });
 
 // 発行したい Action を生成する Action Creator 関数を Dispatch Props にマッピングする

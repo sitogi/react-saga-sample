@@ -3,13 +3,15 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 
 import RepositoryForm, { RepositoryFormProps, RepositoryFormValues } from '../../components/repositories/Form';
-import { GithubState } from '../../reducer';
 import { searchRepositories } from '../../actions/github';
+import store from '../../store';
 
 // Store に保持している Props
 interface StateProps {
   isLoading: boolean;
 }
+
+type AllState = ReturnType<typeof store.getState>;
 
 // Dispatch の Props
 interface DispatchProps {
@@ -20,8 +22,8 @@ interface DispatchProps {
 type EnhancedRepositorySearchProps = RepositoryFormProps & StateProps & DispatchProps;
 
 // StoreState を State Props にするマッパー
-const mapStateToProps = (state: GithubState): StateProps => ({
-  isLoading: state.isLoading,
+const mapStateToProps = (state: AllState): StateProps => ({
+  isLoading: state.gitHub.isLoading,
 });
 
 // Dispatch を Dispatch Props にするマッパー

@@ -5,7 +5,7 @@ import { Redirect, Route, Switch } from 'react-router';
 import Home from './components/Home';
 import Companies from './components/companies'; // index.tsx が自動で読まれているっぽい
 import RepoSearch from './components/repositories/Search';
-import WebSocketSample from './components/websocket/WebSocketSample';
+import MessageList from './containers/websocket/MessageList';
 import CompanyMembers from './containers/companies/Members';
 
 import './App.css';
@@ -28,7 +28,7 @@ const App: FC = () => (
       <Route path={pages.companies.index.path} component={Companies} />
       <Route path={pages.companies.members.path} component={CompanyMembers} />
       <Route path={pages.repositories.search.path} component={RepoSearch} />
-      <Route path={pages.websocket.path} component={WebSocketSample} />
+      <Route path={pages.websocket.path} component={MessageList} />
       <Redirect to="/" />
     </Switch>
   </>

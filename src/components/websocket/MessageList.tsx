@@ -2,16 +2,16 @@ import React, { FC } from 'react';
 import { List } from 'semantic-ui-react';
 
 export interface WebSocketProps {
-  inputTexts: string[];
+  messages: string[];
 }
 
-const Home: FC<WebSocketProps> = ({ inputTexts = [] }) => (
+const MessageList: FC<WebSocketProps> = ({ messages = [] }) => (
   <>
     <List divided relaxed>
-      {inputTexts.map(text => (
-        <List.Item key={text}>
+      {messages.map(msg => (
+        <List.Item key={msg}>
           <List.Content>
-            <List.Header>{text}</List.Header>
+            <List.Header>{msg}</List.Header>
           </List.Content>
         </List.Item>
       ))}
@@ -19,4 +19,4 @@ const Home: FC<WebSocketProps> = ({ inputTexts = [] }) => (
   </>
 );
 
-export default Home;
+export default MessageList;
