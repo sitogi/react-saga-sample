@@ -1,8 +1,13 @@
 import * as ActionType from './actionTypeConstants';
 
 export const websocketActions = {
+  createConnection: (url: string) => ({
+    type: ActionType.CREATE_CONNECTION,
+    payload: url,
+  }),
+
   addMessage: (msg: string) => ({
-    type: ActionType.ADD_MESSAGE as typeof ActionType.ADD_MESSAGE,
+    type: ActionType.ADD_MESSAGE,
     payload: msg,
   }),
 };

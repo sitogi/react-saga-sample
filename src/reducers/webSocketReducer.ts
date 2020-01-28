@@ -4,10 +4,12 @@ import { WebSocketAction } from '../actions/websocket';
 import * as ActionType from '../actions/actionTypeConstants';
 
 export interface WebSocketState {
+  isConnected: boolean;
   messages: string[];
 }
 
 export const initialState: WebSocketState = {
+  isConnected: false,
   messages: [],
 };
 

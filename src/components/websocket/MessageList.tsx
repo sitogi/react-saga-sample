@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { List } from 'semantic-ui-react';
 
 export interface WebSocketProps {
-  messages: string[];
+  messages?: string[];
 }
 
 const MessageList: FC<WebSocketProps> = ({ messages = [] }) => (

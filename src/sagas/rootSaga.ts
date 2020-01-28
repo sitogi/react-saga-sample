@@ -10,5 +10,6 @@ export default function* rootSaga() {
   // Action を Dispatcher から渡されてこないか監視し続けることになる。
 
   // fork は自身とは別のスレッドを起動し、そこで特定のタスクを実行する。 Task オブジェクトを返す。
-  yield all([fork(watchGetMembers), fork(watchSearchRepositories), fork(wsSagas)]);
+  yield all([fork(watchGetMembers), fork(watchSearchRepositories)]);
+  // yield all([fork(watchGetMembers), fork(watchSearchRepositories), fork(wsSagas)]);
 }

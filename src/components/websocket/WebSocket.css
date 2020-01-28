@@ -1,0 +1,8 @@
+.websocket {
+  margin: 2em 1em;
+}
+
+.websocket > .ui.header {
+  margin-bottom: 1.25em;
+  text-align: center;
+}
