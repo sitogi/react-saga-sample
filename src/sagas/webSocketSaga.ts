@@ -10,7 +10,7 @@ const subscribe = (socket: WebSocket) =>
     socket.onopen = () => {
       socket.send('{"message":"sendmessage", "data":"Hello server from Redux-Saga"}');
     };
-    socket.onerror = error => {
+    socket.onerror = () => {
       // nothing to do
     };
     socket.onmessage = event => {
@@ -18,7 +18,7 @@ const subscribe = (socket: WebSocket) =>
       try {
         data = event.data;
       } catch (e) {
-        console.error(`Error parsing : ${event.data}`);
+        // nothing to do
       }
 
       return emitter({ type: Action.ADD_MESSAGE, payload: data });
@@ -56,25 +56,20 @@ function* subscribeSaga(socket: WebSocket) {
 
 function* publishSaga(socket: WebSocket) {
   while (true) {
-    const action: WebSocketAction = yield takeLatest(Action.SEND_MESSAGE);
-    socket.send(action.payload);
-    yield put(action);
+    const action = yield take(Action.SEND_MESSAGE);
+    socket.send(`{"message":"sendmessage", "data":"${action.payload}"}`);
   }
-}
-
-function* publish(socket: WebSocket) {
-  // TODO ここらへんから
 }
 
 export function* wsSagas(connectionAction: ReturnType<typeof websocketActions.createConnection>) {
   const url = connectionAction.payload;
   const socket: WebSocket = new WebSocket(url);
 
-  while (true) {
-    yield fork(subscribeSaga, socket);
+  // while (true) {
+  yield fork(subscribeSaga, socket);
 
-    yield fork(publishSaga, socket);
-  }
+  yield fork(publishSaga, socket);
+  // }
 }
 
 export function* watchConnectWebSocket() {

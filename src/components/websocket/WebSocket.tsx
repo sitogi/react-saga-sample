@@ -4,7 +4,7 @@ import { Header } from 'semantic-ui-react';
 // import ConnectionForm from './ConnectionForm';
 import ConnectionForm from '../../containers/websocket/ConnectionForm';
 import MessageList from '../../containers/websocket/MessageList';
-import MessageForm from './MessageForm';
+import MessageForm from '../../containers/websocket/MessageForm';
 import pages from '../../pages';
 
 import './WebSocket.css';
@@ -20,7 +20,7 @@ const RepositorySearch: FC = () => (
     <div className="websocket">
       <Header as="h2">{pages.websocket.title}</Header>
       <ConnectionForm url="" /> {/* ここで初期値を指定しないとエラーになる原因が分かってないけどいったん放置 */}
-      <MessageForm />
+      <MessageForm message="" />
       <MessageList />
     </div>
   </>
