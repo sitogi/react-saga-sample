@@ -28,6 +28,7 @@ const webSocketReducer: Reducer<WebSocketState, WebSocketAction> = (
       return {
         ...state,
         messages: tmp,
+        isConnected: true,
       };
     default: {
       return { ...state };

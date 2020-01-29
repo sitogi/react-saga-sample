@@ -29,9 +29,18 @@ const ConnectionForm: FC<ConnectionFormProps> = ({
         onChange={(event, data) => handleChange('url', String(data.value))}
         value={values.url}
       />
-      <Button type="submit" disabled={!values.url.length || isConnected} primary data-test="exec-search">
-        接続
-      </Button>
+
+      {!isConnected && (
+        <Button type="submit" disabled={!values.url.length} primary data-test="exec-search">
+          接続
+        </Button>
+      )}
+
+      {isConnected && (
+        <Button type="submit" disabled color="green" data-test="exec-search">
+          接続中
+        </Button>
+      )}
     </form>
   </>
 );
