@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import { Header } from 'semantic-ui-react';
 // import ConnectionForm from './ConnectionForm';
 import ConnectionForm from '../../containers/websocket/ConnectionForm';
-import MessageList from './MessageList';
+import MessageList from '../../containers/websocket/MessageList';
 import pages from '../../pages';
 
 import './WebSocket.css';
@@ -18,7 +18,7 @@ const RepositorySearch: FC = () => (
     </Helmet>
     <div className="websocket">
       <Header as="h2">{pages.websocket.title}</Header>
-      <ConnectionForm url="" />
+      <ConnectionForm url="" /> {/* ここで初期値を指定しないとエラーになる原因が分かってないけどいったん放置 */}
       <MessageList />
     </div>
   </>

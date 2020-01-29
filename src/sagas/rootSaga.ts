@@ -1,7 +1,7 @@
 import { all, fork } from 'redux-saga/effects';
 
 import { watchGetMembers, watchSearchRepositories } from './gitHubSaga';
-import { wsSagas } from './webSocketSaga';
+import { watchConnectWebSocket } from './webSocketSaga';
 
 // rootSaga は最上位のタスクとなるもので、これを Saga ミドルウェアに渡すとアプリ起動時に同時に起動される。
 export default function* rootSaga() {
@@ -10,6 +10,5 @@ export default function* rootSaga() {
   // Action を Dispatcher から渡されてこないか監視し続けることになる。
 
   // fork は自身とは別のスレッドを起動し、そこで特定のタスクを実行する。 Task オブジェクトを返す。
-  yield all([fork(watchGetMembers), fork(watchSearchRepositories)]);
-  // yield all([fork(watchGetMembers), fork(watchSearchRepositories), fork(wsSagas)]);
+  yield all([fork(watchGetMembers), fork(watchSearchRepositories), fork(watchConnectWebSocket)]);
 }

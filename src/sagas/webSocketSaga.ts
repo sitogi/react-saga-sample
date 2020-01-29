@@ -1,14 +1,14 @@
-import { call, put, take } from 'redux-saga/effects';
+import { call, put, take, takeLatest } from 'redux-saga/effects';
 
 import { eventChannel } from 'redux-saga';
 import * as Action from '../actions/actionTypeConstants';
-import { WebSocketAction } from '../actions/websocket';
+import { WebSocketAction, websocketActions } from '../actions/websocket';
 
-const initWebsocket = () =>
+const initWebsocket = (url: string) =>
   eventChannel(emitter => {
-    const socket: WebSocket = new WebSocket('');
+    const socket: WebSocket = new WebSocket(url);
     socket.onopen = () => {
-      socket.send('hello server');
+      socket.send('{"message":"sendmessage", "data":"Hello server from Redux-Saga"}');
     };
     socket.onerror = error => {
       // nothing to do
@@ -44,10 +44,16 @@ const initWebsocket = () =>
     return () => {};
   });
 
-export function* wsSagas() {
-  const channel = yield call(initWebsocket);
+export function* wsSagas(connectionAction: ReturnType<typeof websocketActions.createConnection>) {
+  const url = connectionAction.payload;
+
+  const channel = yield call(initWebsocket, url);
   while (true) {
     const action: WebSocketAction = yield take(channel);
     yield put(action);
   }
+}
+
+export function* watchConnectWebSocket() {
+  yield takeLatest(Action.CREATE_CONNECTION, wsSagas);
 }

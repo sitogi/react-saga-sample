@@ -1,39 +1,37 @@
 import React, { FC, FormEvent, SyntheticEvent, useState } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators, Dispatch } from 'redux';
+import { Dispatch } from 'redux';
 
 import ConnectionForm, { ConnectWebSocketParams } from '../../components/websocket/ConnectionForm';
 import { websocketActions } from '../../actions/websocket';
 import store from '../../store';
 
+type AllState = ReturnType<typeof store.getState>;
+
 interface StateProps {
   isConnected?: boolean;
 }
 
-type AllState = ReturnType<typeof store.getState>;
-
-interface DispatchProps {
-  createConnection: (params: ConnectWebSocketParams) => void;
-}
-
-type EnhancedRepositorySearchProps = ConnectWebSocketParams & StateProps & DispatchProps;
-
-// StoreState を State Props にするマッパー
 const mapStateToProps = (state: AllState): StateProps => ({
   isConnected: state.webSocket.isConnected,
 });
 
-// Dispatch を Dispatch Props にするマッパー
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps =>
-  bindActionCreators(
-    {
-      createConnection: params => websocketActions.createConnection(params),
-    },
-    dispatch,
-  );
+// FC 内で参照するための Dispatch 関数を保持した Props 。
+// あくまでも関数コンポーネントは渡ってきた Props しか意識しないので、 Dispatch も 関数として定義しておく
+interface DispatchProps {
+  createConnection: (url: string) => void;
+}
 
-const ConnectionFormContainer: FC<EnhancedRepositorySearchProps> = ({ isConnected, createConnection }) => {
-  const [values, setValues] = useState<ConnectWebSocketParams>({
+// FC 内で参照する Props と、実際に実行する Dispatcher をマッピングするための関数
+// この関数を定義しておき、 Redux に渡してあげることであとはよしなにやってくれるようになる。
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+  createConnection: url => dispatch(websocketActions.createConnection(url)),
+});
+
+type EnhancedWSProps = ConnectWebSocketParams & StateProps & DispatchProps;
+
+const ConnectionFormContainer: FC<EnhancedWSProps> = ({ isConnected, createConnection }) => {
+  const [params, setValues] = useState<ConnectWebSocketParams>({
     url: '',
   });
 
@@ -48,12 +46,12 @@ const ConnectionFormContainer: FC<EnhancedRepositorySearchProps> = ({ isConnecte
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     if (event) {
       event.preventDefault();
-      createConnection(values);
+      createConnection(params.url);
     }
   };
 
   return (
-    <ConnectionForm handleChange={handleChange} handleSubmit={handleSubmit} values={values} isConnected={isConnected} />
+    <ConnectionForm handleChange={handleChange} handleSubmit={handleSubmit} values={params} isConnected={isConnected} />
   );
 };
 
