@@ -23,7 +23,7 @@ const initWebsocket = (url: string) =>
 
       return emitter({ type: Action.ADD_MESSAGE, payload: data });
 
-      // 受信した内容によって分岐して、必要な Action を返す
+      // 受信した内容によって分岐して、必要な Action を返せる
       // if (msg) {
       //   const { payload: book } = msg;
       //   const { channel } = msg;
@@ -47,6 +47,8 @@ const initWebsocket = (url: string) =>
 export function* wsSagas(connectionAction: ReturnType<typeof websocketActions.createConnection>) {
   const url = connectionAction.payload;
 
+  // EventChannel を作成し、それを take で待ち受けることによって EventChannel 内のイベントを待機できる
+  // eventChannel 内では、引数の emitter 関数の戻り値を return させることで、 yield take(channel) に教えることができる
   const channel = yield call(initWebsocket, url);
   while (true) {
     const action: WebSocketAction = yield take(channel);
