@@ -10,6 +10,11 @@ export const websocketActions = {
     type: ActionType.ADD_MESSAGE,
     payload: msg,
   }),
+
+  sendMessage: (message: string) => ({
+    type: ActionType.SEND_MESSAGE,
+    payload: message,
+  }),
 };
 
 export type WebSocketAction = ReturnType<typeof websocketActions.addMessage>;

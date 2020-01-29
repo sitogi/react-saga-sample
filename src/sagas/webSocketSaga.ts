@@ -1,12 +1,12 @@
-import { call, put, take, takeLatest } from 'redux-saga/effects';
+/* eslint-disable no-param-reassign */
+import { call, put, take, takeLatest, fork } from 'redux-saga/effects';
 
 import { eventChannel } from 'redux-saga';
 import * as Action from '../actions/actionTypeConstants';
 import { WebSocketAction, websocketActions } from '../actions/websocket';
 
-const initWebsocket = (url: string) =>
+const subscribe = (socket: WebSocket) =>
   eventChannel(emitter => {
-    const socket: WebSocket = new WebSocket(url);
     socket.onopen = () => {
       socket.send('{"message":"sendmessage", "data":"Hello server from Redux-Saga"}');
     };
@@ -44,15 +44,36 @@ const initWebsocket = (url: string) =>
     return () => {};
   });
 
-export function* wsSagas(connectionAction: ReturnType<typeof websocketActions.createConnection>) {
-  const url = connectionAction.payload;
-
+function* subscribeSaga(socket: WebSocket) {
   // EventChannel を作成し、それを take で待ち受けることによって EventChannel 内のイベントを待機できる
   // eventChannel 内では、引数の emitter 関数の戻り値を return させることで、 yield take(channel) に教えることができる
-  const channel = yield call(initWebsocket, url);
+  const channel = yield call(subscribe, socket);
   while (true) {
     const action: WebSocketAction = yield take(channel);
     yield put(action);
+  }
+}
+
+function* publishSaga(socket: WebSocket) {
+  while (true) {
+    const action: WebSocketAction = yield takeLatest(Action.SEND_MESSAGE);
+    socket.send(action.payload);
+    yield put(action);
+  }
+}
+
+function* publish(socket: WebSocket) {
+  // TODO ここらへんから
+}
+
+export function* wsSagas(connectionAction: ReturnType<typeof websocketActions.createConnection>) {
+  const url = connectionAction.payload;
+  const socket: WebSocket = new WebSocket(url);
+
+  while (true) {
+    yield fork(subscribeSaga, socket);
+
+    yield fork(publishSaga, socket);
   }
 }
 

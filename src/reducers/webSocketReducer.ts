@@ -30,6 +30,11 @@ const webSocketReducer: Reducer<WebSocketState, WebSocketAction> = (
         messages: tmp,
         isConnected: true,
       };
+    case ActionType.SEND_MESSAGE:
+      return {
+        ...state,
+        isConnected: true,
+      };
     default: {
       return { ...state };
     }
