@@ -17,16 +17,16 @@ const mapStateToProps = (state: AllState): StateProps => ({
 });
 
 interface DispatchProps {
-  sendMessage: (message: string) => void;
+  publishMessage: (message: string) => void;
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  sendMessage: message => dispatch(websocketActions.sendMessage(message)),
+  publishMessage: message => dispatch(websocketActions.publishMessage(message)),
 });
 
 type EnhancedWSProps = { message: string; isConnected: boolean } & StateProps & DispatchProps;
 
-const MessageFormContainer: FC<EnhancedWSProps> = ({ sendMessage, isConnected }) => {
+const MessageFormContainer: FC<EnhancedWSProps> = ({ publishMessage: sendMessage, isConnected }) => {
   const [msg, setValues] = useState('');
 
   const handleChange = (newValue: string, event?: SyntheticEvent) => {
@@ -41,6 +41,7 @@ const MessageFormContainer: FC<EnhancedWSProps> = ({ sendMessage, isConnected })
     if (event) {
       event.preventDefault();
       sendMessage(msg);
+      setValues('');
     }
   };
 

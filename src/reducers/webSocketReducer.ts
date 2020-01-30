@@ -22,7 +22,7 @@ const webSocketReducer: Reducer<WebSocketState, WebSocketAction> = (
 
   // ActionType で場合分け
   switch (action.type) {
-    case ActionType.ADD_MESSAGE:
+    case ActionType.SUBSCRIBE_MESSAGE:
       tmp.push(action.payload);
 
       return {
@@ -30,7 +30,7 @@ const webSocketReducer: Reducer<WebSocketState, WebSocketAction> = (
         messages: tmp,
         isConnected: true,
       };
-    case ActionType.SEND_MESSAGE:
+    case ActionType.PUBLISH_MESSAGE:
       return {
         ...state,
         isConnected: true,

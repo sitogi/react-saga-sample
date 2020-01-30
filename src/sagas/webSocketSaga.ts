@@ -1,27 +1,20 @@
-/* eslint-disable no-param-reassign */
 import { call, put, take, takeLatest, fork } from 'redux-saga/effects';
-
 import { eventChannel } from 'redux-saga';
 import * as Action from '../actions/actionTypeConstants';
 import { WebSocketAction, websocketActions } from '../actions/websocket';
 
 const subscribe = (socket: WebSocket) =>
   eventChannel(emitter => {
-    socket.onopen = () => {
+    socket.addEventListener('open', () => {
       socket.send('{"message":"sendmessage", "data":"Hello server from Redux-Saga"}');
-    };
-    socket.onerror = () => {
+    });
+    socket.addEventListener('error', () => {
       // nothing to do
-    };
-    socket.onmessage = event => {
-      let data = null;
-      try {
-        data = event.data;
-      } catch (e) {
-        // nothing to do
-      }
+    });
+    socket.addEventListener('message', event => {
+      const { data } = event;
 
-      return emitter({ type: Action.ADD_MESSAGE, payload: data });
+      return emitter({ type: Action.SUBSCRIBE_MESSAGE, payload: data });
 
       // 受信した内容によって分岐して、必要な Action を返せる
       // if (msg) {
@@ -38,7 +31,7 @@ const subscribe = (socket: WebSocket) =>
       // } else {
       //   return null;
       // }
-    };
+    });
 
     // unsubscribe function
     return () => {};
@@ -56,20 +49,21 @@ function* subscribeSaga(socket: WebSocket) {
 
 function* publishSaga(socket: WebSocket) {
   while (true) {
-    const action = yield take(Action.SEND_MESSAGE);
+    const action = yield take(Action.PUBLISH_MESSAGE);
     socket.send(`{"message":"sendmessage", "data":"${action.payload}"}`);
   }
 }
 
 export function* wsSagas(connectionAction: ReturnType<typeof websocketActions.createConnection>) {
   const url = connectionAction.payload;
-  const socket: WebSocket = new WebSocket(url);
 
-  // while (true) {
-  yield fork(subscribeSaga, socket);
-
-  yield fork(publishSaga, socket);
-  // }
+  try {
+    const socket: WebSocket = new WebSocket(url);
+    yield fork(subscribeSaga, socket);
+    yield fork(publishSaga, socket);
+  } catch (error) {
+    // TODO: add error handling
+  }
 }
 
 export function* watchConnectWebSocket() {

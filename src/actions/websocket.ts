@@ -6,15 +6,15 @@ export const websocketActions = {
     payload: url,
   }),
 
-  addMessage: (msg: string) => ({
-    type: ActionType.ADD_MESSAGE,
+  subscribeMessage: (msg: string) => ({
+    type: ActionType.SUBSCRIBE_MESSAGE,
     payload: msg,
   }),
 
-  sendMessage: (message: string) => ({
-    type: ActionType.SEND_MESSAGE,
+  publishMessage: (message: string) => ({
+    type: ActionType.PUBLISH_MESSAGE,
     payload: message,
   }),
 };
 
-export type WebSocketAction = ReturnType<typeof websocketActions.addMessage>;
+export type WebSocketAction = ReturnType<typeof websocketActions.subscribeMessage>;
