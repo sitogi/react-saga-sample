@@ -41,3 +41,6 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# debug module
+.vscode/chrome
+
