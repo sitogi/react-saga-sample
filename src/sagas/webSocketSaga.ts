@@ -62,7 +62,7 @@ export function* wsSagas(connectionAction: ReturnType<typeof websocketActions.cr
     yield fork(subscribeSaga, socket);
     yield fork(publishSaga, socket);
   } catch (error) {
-    // TODO: add error handling
+    yield put(websocketActions.connectFail(error));
   }
 }
 

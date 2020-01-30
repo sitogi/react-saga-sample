@@ -1,5 +1,6 @@
+/* eslint-disable no-nested-ternary */
 import React, { FC, FormEvent } from 'react';
-import { Button, Input } from 'semantic-ui-react';
+import { Button, Input, Message } from 'semantic-ui-react';
 
 import './MessageForm.css';
 
@@ -8,6 +9,7 @@ export interface MessageFormProps {
   handleSubmit?: (event: FormEvent<HTMLFormElement>) => void;
   message: string;
   isConnected: boolean;
+  connectFailed: boolean;
 }
 
 const MessageForm: FC<MessageFormProps> = ({
@@ -15,10 +17,17 @@ const MessageForm: FC<MessageFormProps> = ({
   handleSubmit = () => {},
   message = '',
   isConnected = false,
+  connectFailed = false,
 }) => (
   <>
     {!isConnected ? (
-      <div />
+      !connectFailed ? (
+        <div />
+      ) : (
+        <Message negative>
+          <Message.Header>接続に失敗しました。</Message.Header>
+        </Message>
+      )
     ) : (
       <form className="message-form" onSubmit={handleSubmit}>
         <Input

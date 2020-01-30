@@ -5,11 +5,13 @@ import * as ActionType from '../actions/actionTypeConstants';
 
 export interface WebSocketState {
   isConnected: boolean;
+  connectFailed: boolean;
   messages: string[];
 }
 
 export const initialState: WebSocketState = {
   isConnected: false,
+  connectFailed: false,
   messages: [],
 };
 
@@ -22,6 +24,12 @@ const webSocketReducer: Reducer<WebSocketState, WebSocketAction> = (
 
   // ActionType で場合分け
   switch (action.type) {
+    case ActionType.CONNECT_FAIL:
+      return {
+        ...state,
+        isConnected: false,
+        connectFailed: true,
+      };
     case ActionType.SUBSCRIBE_MESSAGE:
       tmp.push(action.payload);
 

@@ -10,10 +10,12 @@ type AllState = ReturnType<typeof store.getState>;
 
 interface StateProps {
   isConnected: boolean;
+  connectFailed: boolean;
 }
 
 const mapStateToProps = (state: AllState): StateProps => ({
   isConnected: state.webSocket.isConnected,
+  connectFailed: state.webSocket.connectFailed,
 });
 
 interface DispatchProps {
@@ -26,7 +28,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
 
 type EnhancedWSProps = { message: string; isConnected: boolean } & StateProps & DispatchProps;
 
-const MessageFormContainer: FC<EnhancedWSProps> = ({ publishMessage: sendMessage, isConnected }) => {
+const MessageFormContainer: FC<EnhancedWSProps> = ({ publishMessage: sendMessage, isConnected, connectFailed }) => {
   const [msg, setValues] = useState('');
 
   const handleChange = (newValue: string, event?: SyntheticEvent) => {
@@ -46,7 +48,13 @@ const MessageFormContainer: FC<EnhancedWSProps> = ({ publishMessage: sendMessage
   };
 
   return (
-    <MessageForm handleChange={handleChange} handleSubmit={handleSubmit} message={msg} isConnected={isConnected} />
+    <MessageForm
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      message={msg}
+      isConnected={isConnected}
+      connectFailed={connectFailed}
+    />
   );
 };
 
