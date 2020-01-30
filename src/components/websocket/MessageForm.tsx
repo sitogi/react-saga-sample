@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import React, { FC, FormEvent } from 'react';
 import { Button, Input, Message } from 'semantic-ui-react';
 
@@ -18,17 +17,27 @@ const MessageForm: FC<MessageFormProps> = ({
   message = '',
   isConnected = false,
   connectFailed = false,
-}) => (
-  <>
-    {!isConnected ? (
-      !connectFailed ? (
+}) => {
+  if (!isConnected) {
+    if (connectFailed) {
+      return (
+        <>
+          <Message negative>
+            <Message.Header>接続に失敗しました。</Message.Header>
+          </Message>
+        </>
+      );
+    }
+
+    return (
+      <>
         <div />
-      ) : (
-        <Message negative>
-          <Message.Header>接続に失敗しました。</Message.Header>
-        </Message>
-      )
-    ) : (
+      </>
+    );
+  }
+
+  return (
+    <>
       <form className="message-form" onSubmit={handleSubmit}>
         <Input
           placeholder=""
@@ -42,8 +51,8 @@ const MessageForm: FC<MessageFormProps> = ({
           送信
         </Button>
       </form>
-    )}
-  </>
-);
+    </>
+  );
+};
 
 export default MessageForm;
